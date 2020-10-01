@@ -1,0 +1,78 @@
+Last login: Thu Oct  1 16:44:03 on ttys005
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker build . -t cxyhaha1997/sample-time-app:latest
+[+] Building 1.1s (11/11) FINISHED                                                                  
+ => [internal] load .dockerignore                                                              0.0s
+ => => transferring context: 2B                                                                0.0s
+ => [internal] load build definition from Dockerfile                                           0.0s
+ => => transferring dockerfile: 260B                                                           0.0s
+ => [internal] load metadata for docker.io/library/python:3.5                                  1.0s
+ => [1/6] FROM docker.io/library/python:3.5@sha256:42a37d6b8c00b186bdfb2b620fa8023eb775b3eb3a  0.0s
+ => [internal] load build context                                                              0.0s
+ => => transferring context: 1.09kB                                                            0.0s
+ => CACHED [2/6] RUN apt-get update   && apt-get clean   && rm -rf /var/lib/apt/lists/* /tmp/  0.0s
+ => CACHED [3/6] RUN groupadd -g 799 nyu &&     useradd -r -u 999 -g nyu nyu                   0.0s
+ => CACHED [4/6] WORKDIR /app                                                                  0.0s
+ => CACHED [5/6] RUN pip install Flask                                                         0.0s
+ => CACHED [6/6] COPY --chown=nyu:nyu . .                                                      0.0s
+ => exporting to image                                                                         0.0s
+ => => exporting layers                                                                        0.0s
+ => => writing image sha256:28710ef0f298841122034808a077eae71017ba5f89e8956a9b8cc61d08704a62   0.0s
+ => => naming to docker.io/cxyhaha1997/sample-time-app:latest                                  0.0s
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker run --name sample-time-app -p 8080:8080 -it cxyhaha1997/sample-time-app:latest
+docker: Error response from daemon: Conflict. The container name "/sample-time-app" is already in use by container "ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker stop ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e
+ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker run --name sample-time-app -p 8080:8080 -it cxyhaha1997/sample-time-app:latest
+docker: Error response from daemon: Conflict. The container name "/sample-time-app" is already in use by container "ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker rm ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e
+ae71588a1def9129a316fdf1ee9b7de65732af25dbfa4a5439a139eb0385705e
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker run --name sample-time-app -p 8080:8080 -it cxyhaha1997/sample-time-app:latest
+21:05:17
+ * Serving Flask app "run" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:8080/ (Press CTRL+C to quit)
+ * Restarting with stat
+21:05:17
+ * Debugger is active!
+ * Debugger PIN: 163-906-502
+172.17.0.1 - - [01/Oct/2020 21:05:29] "GET / HTTP/1.1" 200 -
+^C(base) Cynthias-MBP:sample_time_app cynthiachen$ docker login
+Authenticating with existing credentials...
+Login Succeeded
+(base) Cynthias-MBP:sample_time_app cynthiachen$ docker push cxyhaha1997/sample-time-app:latest
+The push refers to repository [docker.io/cxyhaha1997/sample-time-app]
+810651e2a4c4: Pushed 
+92e1792d549b: Layer already exists 
+7518ab146d26: Layer already exists 
+5fdcc97674bb: Layer already exists 
+ae4693124642: Layer already exists 
+95d78f868723: Layer already exists 
+493fa57d210f: Layer already exists 
+5aed5e63d645: Layer already exists 
+97be79495d2a: Layer already exists 
+a995c5106335: Layer already exists 
+17bdf5e22660: Layer already exists 
+d37096232ed8: Layer already exists 
+6add0d2b5482: Layer already exists 
+4ef54afed780: Layer already exists 
+latest: digest: sha256:550d5cb00902853b306140b33901695a042960ecb33ecc3823613cce968648ee size: 3258
+(base) Cynthias-MBP:sample_time_app cynthiachen$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.0", GitCommit:"e19964183377d0ec2052d1f1fa930c4d7575bd50", GitTreeState:"clean", BuildDate:"2020-08-26T14:30:33Z", GoVersion:"go1.15", Compiler:"gc", Platform:"darwin/amd64"}
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+(base) Cynthias-MBP:sample_time_app cynthiachen$ kubectl create deployment sample-time-app --image=docker.io/cxyhaha1997/sample-time-app:latest
+error: failed to create deployment: Post "http://localhost:8080/apis/apps/v1/namespaces/default/deployments?fieldManager=kubectl-create": dial tcp [::1]:8080: connect: connection refused
+(base) Cynthias-MBP:sample_time_app cynthiachen$ kubectl expose deployment/sample-time-app --type="NodePort" --port=8080
+error: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+See 'kubectl expose -h' for help and examples
+(base) Cynthias-MBP:sample_time_app cynthiachen$ kubectl get nodes
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+(base) Cynthias-MBP:sample_time_app cynthiachen$ 
